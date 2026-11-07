@@ -1,0 +1,7 @@
+# Outils du projet — installer avec : rokit install
+# (ou remplacer par aftman : renommer en aftman.toml)
+[tools]
+rojo = "rojo-rbx/rojo@7.7.1"
+stylua = "JohnnyMorganz/StyLua@2.0.0"
+selene = "Kampfkarren/selene@0.27.1"
+luau-lsp = "JohnnyMorganz/luau-lsp@1.70.1"
