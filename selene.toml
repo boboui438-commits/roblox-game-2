@@ -1,0 +1,6 @@
+std = "roblox"
+
+[lints]
+# Les modules sont résolus par Rojo : les globals Roblox sont fournis par `std`.
+multiple_statements = "allow"
+shadowing = "allow"

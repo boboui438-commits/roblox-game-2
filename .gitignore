@@ -1,0 +1,29 @@
+# Éléments générés / locaux
+build/
+out/
+dist/
+*.rbxl
+*.rbxlx
+*.rbxm
+*.rbxmx
+sourcemap.json
+rojo.json
+
+# Outils
+.rokit/
+~/.aftman
+.aftman/
+
+# Système
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+
+# Éditeurs
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp

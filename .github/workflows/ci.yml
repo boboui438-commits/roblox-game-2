@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build:
+    name: Build place (Rojo)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Rojo
+        run: |
+          curl -sSL -o rojo.zip https://github.com/rojo-rbx/rojo/releases/download/v7.7.1/rojo-7.7.1-linux-x86_64.zip
+          unzip -q rojo.zip -d .rojo
+          chmod +x .rojo/rojo
+          ./.rojo/rojo --version
+
+      - name: Construire le fichier .rbxlx
+        run: |
+          mkdir -p build
+          ./.rojo/rojo build default.project.json --output build/StealAnEgg.rbxlx
+          ls -la build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: StealAnEgg-place
+          path: build/StealAnEgg.rbxlx
+
+  syntax:
+    name: Vérifications Luau
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer le compilateur Luau
+        run: |
+          curl -sSL -o luau.zip https://github.com/luau-lang/luau/releases/download/0.745/luau-ubuntu.zip
+          unzip -q luau.zip -d .luau
+          chmod +x .luau/luau .luau/luau-compile
+
+      - name: Compiler tous les scripts
+        run: |
+          fail=0
+          for file in $(find src -name '*.luau' | sort); do
+            if ./.luau/luau-compile --binary "$file" > /dev/null; then
+              echo "OK   $file"
+            else
+              echo "FAIL $file"
+              ./.luau/luau-compile --binary "$file" || true
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Tests logiques (catalogue + économie)
+        env:
+          LUAU_BIN: ${{ github.workspace }}/.luau/luau
+        run: python3 tests/run_logic_tests.py
